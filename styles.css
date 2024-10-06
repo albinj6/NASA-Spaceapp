@@ -1,0 +1,142 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Hind&family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200&display=swap');
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: url('./img/re.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
+.col-md-6
+{
+    color: #fff;
+}
+nav{
+    width: 100%;
+    height: 100px;
+  
+    color: #ffffff;
+    display: flex;
+    justify-content: space-around;
+align-items: center;
+}
+.logo{
+    font-size: 2em;
+    letter-spacing: 2px;
+}
+.menu a{
+    text-decoration: none;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-size: 20px;
+}
+
+.menu a:hover{
+   border: 1px solid indianred;
+   background: transparent;
+}
+
+.h-text{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 650px;
+    transform: translate(-50%,-50%);
+    text-align: center;
+    color: #fff;
+}
+.h-text span{
+    letter-spacing: 5px;
+}
+.h-text h1{
+    font-size: 3.5em;
+}
+.h-text a{
+    text-decoration: none;
+    background: indianred;
+    padding: 10px 20px;
+    color: #fff;
+    letter-spacing: 5px;
+    transition: 0.4s;
+}
+.h-text a:hover{
+    border: 1px solid indianred;
+    background: transparent;
+}
+.text-center
+{
+    color: #fff;
+}
+
+.planet-card {
+    background: rgba(196, 196, 196, 0.821);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.planet-card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.chart-container {
+    width: 100%;
+    height: 400px;
+    margin-top: 20px;
+}
+.my-4-text-center
+{
+    text-align: center;
+    color: #fff;
+}
+.modal-content
+{
+    color: black;
+}
+footer {
+    text-align: center;
+    margin-top: 50px;
+    color: #fff;
+}
+
+
+.box {
+    margin-left: 100px; /* Space from the left */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: rgba(217, 218, 217, 0.836); /* Background color */
+    border-radius: 20px; /* Rounded corners */
+    border: 2px solid rgba(0, 0, 0, 0.1); /* Light border */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+    color: black; /* Text color */
+    font-family: 'Arial', sans-serif; /* Font family */
+    width: 700px; /* Fixed width */
+    text-align: center; /* Center-align text */
+}
+
+.box:hover {
+    opacity: 0.8;
+}
+.all {
+    display: flex;
+    flex-direction: column; /* Space between .box and .analyse */ /* Align items vertically in the center */
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+
+
+

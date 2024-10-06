@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing page using html css</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+
+<nav>
+<div class="logo">
+Cosmic Discoveries
+</div>
+<div class="menu">
+    <a href="index.html">Home</a>
+    <a href="news.html">News & Articles</a>
+    <a href="explore.html">Explore</a>
+    <a href="contact.html">Contact</a>
+    <a href="game.html">Game</a>
+
+</div>
+
+</nav>
+<div class="container">
+    <header class="my-4-text-center">
+        <h1>Exoplanet Explorer</h1>
+        <p>Explore fascinating exoplanets beyond our Solar System</p>
+    </header>
+
+    <div id="planet-cards" class="row">
+        <!-- Cards for each exoplanet will be dynamically inserted here -->
+    </div>
+
+    <div class="chart-container">
+        <canvas id="exoplanet-chart"></canvas>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Cosmic Discoveries | Powered by Astronomy</p>
+    </footer>
+</div>
+
+<!-- Modal for displaying exoplanet details -->
+<div class="modal fade" id="planetModal" tabindex="-1" aria-labelledby="planetModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="planetModalLabel">Exoplanet Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img id="planet-image" src="" alt="Planet Image" style="width: 100%; max-width: 200px; height: auto; margin-bottom: 20px;">
+                <h2 id="planet-name"></h2>
+                <p id="planet-description"></p>
+                <p><strong>Distance:</strong> <span id="planet-distance"></span> light-years</p>
+                <p><strong>Radius:</strong> <span id="planet-radius"></span> Earth radii</p>
+                <p><strong>Discovery Year:</strong> <span id="planet-discovery-year"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Example planet data
+    const exoplanets = [
+        {
+            name: "Kepler-452b",
+            imageSrc: "./img/kepler-452b.jpeg", 
+            distance: 1400,
+            radius: 1.63,
+            discoveryYear: 2015,
+            description: "Known as Earth's 'cousin,' Kepler-452b is a super-Earth orbiting in the habitable zone of a Sun-like star. It could have a rocky composition but likely has a thicker atmosphere than Earth."
+        },
+        {
+            name: "Proxima Centauri b",
+            imageSrc: "./img/proxima.jpeg",
+            distance: 4.24,
+            radius: 1.17,
+            discoveryYear: 2016,
+            description: "Proxima Centauri b is the closest known exoplanet to Earth, orbiting the red dwarf star Proxima Centauri. It lies within the star's habitable zone, which means it could potentially have liquid water on its surface. However, the habitability is uncertain due to stellar activity from its host star."
+        },
+        {
+            name: "TRAPPIST-1d",
+            imageSrc: "./img/trappist.jpeg",
+            distance: 40,
+            radius: 0.77,
+            discoveryYear: 2017,
+            description: "Part of the TRAPPIST-1 system, TRAPPIST-1d is one of seven Earth-sized planets orbiting an ultra-cool dwarf star. It resides in the habitable zone, making it a candidate for potential habitability."
+        },
+        {
+            name: "Kepler-22b",
+            imageSrc: "./img/kepler-22b.jpeg",
+            distance: 620,
+            radius: 2.4,
+            discoveryYear: 2011,
+            description: "The first confirmed exoplanet discovered in the habitable zone of a Sun-like star. Kepler-22b is larger than Earth and could either be a water world or have a thick atmosphere."
+        },
+        {
+            name: "55 Cancri e",
+            imageSrc: "./img/55-cancri.jpeg",
+            distance: 41,
+            radius: 1.88,
+            discoveryYear: 2004,
+            description: "A super-Earth with a scorching surface temperature due to its proximity to its host star. 55 Cancri e is thought to have a rocky core and possibly molten lava on its surface."
+        },
+        {
+            name: "LHS 1140 b",
+            imageSrc: "./img/lhs.jpeg",
+            distance: 40,
+            radius: 1.27,
+            discoveryYear: 2017,
+            description: "LHS 1140 b is a dense, rocky exoplanet orbiting within the habitable zone of a red dwarf. It is one of the best planets for studying potential atmospheres and habitability."
+        },
+        {
+            name: "GJ 1214 b",
+            imageSrc: "./img/gj1214.jpeg",
+            distance: 48,
+            radius: 26,
+            discoveryYear: 2009,
+            description: "GJ 1214 b is a 'water world' or mini-Neptune, possibly with a large ocean beneath a thick atmosphere. It is a heavily studied exoplanet due to its proximity and atmospheric properties."
+        },
+        {
+            name: "HD 209458 b (Osiris)",
+            imageSrc: "./img/hd.jpeg",
+            distance: 150,
+            radius: 1.38,
+            discoveryYear: 1999,
+            description: "Osiris is a hot Jupiter and was the first exoplanet found to transit its star. It was also the first exoplanet where atmospheric elements were detected, offering crucial data on exoplanet atmospheres."
+        },
+        {
+            name: "WASP-12b",
+            imageSrc: "./img/wasp.jpeg",
+            distance: 1400,
+            radius: 1.79,
+            discoveryYear: 2008,
+            description: "A hot Jupiter known for extreme heat and its stretched, egg-like shape due to its proximity to its star. WASP-12b is gradually losing mass as it is being pulled apart by tidal forces from its star."
+        },
+        {
+            name: "TOI-700 d",
+            imageSrc: "./img/toi.jpeg",
+            distance: 101.4,
+            radius: 1.19,
+            discoveryYear: 2020,
+            description: "TOI-700 d is an Earth-sized exoplanet discovered by NASA’s TESS mission. It orbits within the habitable zone of its star and is one of the few known planets of its size and distance that could potentially support life."
+        },
+        {
+            name: "Gliese 667 Cc",
+            imageSrc: "./img/gliese.jpeg",
+            distance: 23.62,
+            radius: 1.5,
+            discoveryYear: 2011,
+            description: "Gliese 667 Cc is a super-Earth located in the habitable zone of its host star, a red dwarf in the Gliese 667 triple star system. It receives similar energy to Earth, which makes it a candidate for potentially having liquid water on its surface. Its mass suggests it could be rocky."
+        },
+        {
+            name: "Kepler-186f",
+            imageSrc: "./img/kepler-186.jpeg",
+            distance: 492,
+            radius: 1.11,
+            discoveryYear: 2014,
+            description: "Kepler-186f was the first Earth-sized planet discovered in the habitable zone of another star. It orbits a red dwarf star, and its size suggests it could be rocky. While its exact atmospheric conditions are unknown, its location in the habitable zone raises the possibility of surface water."
+        },
+    ];
+
+    // Display planet cards
+    const planetCardsContainer = document.getElementById("planet-cards");
+    exoplanets.forEach((planet, index) => {
+    planetCardsContainer.innerHTML += `
+        <div class="col-md-4">
+            <div class="planet-card" data-index="${index}">
+                <h2>${planet.name}</h2>
+                <p><strong>Distance:</strong> ${planet.distance} light-years</p>
+                <p><strong>Radius:</strong> ${planet.radius} Earth radii</p>
+                <p><strong>Discovery Year:</strong> ${planet.discoveryYear}</p>
+            </div>
+        </div>
+    `;
+});
+
+    // Add event listeners to each card
+    document.querySelectorAll('.planet-card').forEach(card => {
+    card.addEventListener('click', function () {
+        const index = this.getAttribute('data-index');
+        const planet = exoplanets[index];
+
+        // Fill modal with planet data
+        document.getElementById('planet-name').innerText = planet.name;
+        document.getElementById('planet-description').innerText = planet.description;
+        document.getElementById('planet-distance').innerText = planet.distance;
+        document.getElementById('planet-radius').innerText = planet.radius;
+        document.getElementById('planet-discovery-year').innerText = planet.discoveryYear;
+
+        // Set the planet image
+        document.getElementById('planet-image').src = planet.imageSrc;
+
+        // Show the modal
+        const planetModal = new bootstrap.Modal(document.getElementById('planetModal'));
+        planetModal.show();
+    });
+});
+
+
+    // Chart.js for visualizing exoplanets by distance
+    const ctx = document.getElementById('exoplanet-chart').getContext('2d');
+    const exoplanetChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: exoplanets.map(planet => planet.name),
+            datasets: [{
+                label: 'Distance from Earth (light-years)',
+                data: exoplanets.map(planet => planet.distance),
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+                
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                ticks: {
+                    color: '#fff',  // Change the x-axis text color (e.g., tomato)
+                },
+                title: {
+                    display: true,
+                    text: 'Exoplanets',
+                    color: '#fff',  // Change the x-axis title color
+                }
+            },
+            y: {
+                ticks: {
+                    color: '#fff',  // Change the y-axis text color (e.g., steelblue)
+                },
+                title: {
+                    display: true,
+                    text: 'Distance (light-years)',
+                    color: '#fff',  // Change the y-axis title color
+                }
+            }
+            },
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

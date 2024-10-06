@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exoplanet Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-image: url('./img/re.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        .quiz-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        .question {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .options button:hover {
+            background-color: #0056b3;
+        }
+        .result, .correct-answer {
+            font-size: 18px;
+            margin-top: 10px;
+            color: #333;
+        }
+        .start-button, .retry-button, .home-button-final, .home-button-intro {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        .retry-button, .home-button-final, .home-button-intro {
+            background-color: #007bff;
+            margin: 15px;
+        }
+        .start-button:hover, .retry-button:hover, .home-button-final:hover, .home-button-intro:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="intro">
+        <h1>Welcome to the Exoplanet Quiz!</h1>
+        <button class="start-button">Start Quiz</button>
+        <br>
+        <button class="home-button-intro">Back to Home</button>
+    </div>
+    <div class="quiz-content" style="display: none;">
+        <div class="question">Loading question...</div>
+        <div class="options"></div>
+        <div class="result"></div>
+        <div class="correct-answer"></div>
+    </div>
+    <div class="final-screen" style="display: none;">
+        <div class="final-message"></div>
+        <button class="retry-button">Retry Quiz</button>
+        <button class="home-button-final">Back to Home</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "Which NASA website provides access to exoplanet data, images, and resources?",
+            options: ["NASA Exoplanets", "Planetary Science Archive", "Exoplanet Zoo", "Canadian Astronomy Data Centre"],
+            correct: "NASA Exoplanets"
+        },
+        {
+            question: "What is 'Eyes on Exoplanets'?",
+            options: ["A data visualization tool", "A 3D interactive website", "A lesson plan", "A space telescope"],
+            correct: "A 3D interactive website"
+        },
+        {
+            question: "Which educational resource provides lesson plans and activities about exoplanets?",
+            options: ["Jet Propulsion Laboratory STEM Lessons", "NASA Exoplanet Archive", "ESA Hack an Exoplanet", "James Webb Space Telescope Tutorial"],
+            correct: "Jet Propulsion Laboratory STEM Lessons"
+        },
+        {
+            question: "Where is the NASA Exoplanet Archive hosted?",
+            options: ["Caltech", "ESA", "Canadian Space Agency", "Brazilian Space Agency"],
+            correct: "Caltech"
+        },
+        {
+            question: "Which ESA mission is part of the 'Hack an Exoplanet' activity?",
+            options: ["Cheops", "Rosetta", "ExoMars", "BepiColombo"],
+            correct: "Cheops"
+        },
+        {
+            question: "Which archive is the central repository for scientific and engineering data from ESA's Solar System missions?",
+            options: ["Planetary Science Archive", "Exoplanet Zoo", "Canadian Astronomy Data Centre", "NASA Exoplanet Archive"],
+            correct: "Planetary Science Archive"
+        },
+        {
+            question: "Which space agency is associated with the Exoplanet Zoo?",
+            options: ["Canadian Space Agency", "NASA", "Brazilian Space Agency", "European Space Agency"],
+            correct: "Canadian Space Agency"
+        },
+        {
+            question: "Where can you find open data from the Canadian government's astronomy projects?",
+            options: ["Canadian Astronomy Data Centre", "NASA Exoplanet Archive", "ESA's Planetary Science Archive", "Jet Propulsion Laboratory STEM Lessons"],
+            correct: "Canadian Astronomy Data Centre"
+        },
+        {
+            question: "What type of exoplanet data can be accessed via the NASA Exoplanet Archive?",
+            options: ["Exoplanet characteristics", "Only images", "Planetary atmospheres", "Astronautical data"],
+            correct: "Exoplanet characteristics"
+        },
+        {
+            question: "What does the James Webb Space Telescope Tutorial provide?",
+            options: ["Guidance on utilizing JWST data", "Astronomy data from Mars", "Lesson plans", "Interactive games"],
+            correct: "Guidance on utilizing JWST data"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    const quizContent = document.querySelector('.quiz-content');
+    const introContent = document.querySelector('.intro');
+    const finalScreen = document.querySelector('.final-screen');
+    const startButton = document.querySelector('.start-button');
+    const retryButton = document.querySelector('.retry-button');
+    const questionEl = document.querySelector('.question');
+    const optionsEl = document.querySelector('.options');
+    const resultEl = document.querySelector('.result');
+    const correctAnswerEl = document.querySelector('.correct-answer');
+    const finalMessageEl = document.querySelector('.final-message');
+    const homeButtonIntro = document.querySelector('.home-button-intro');
+const homeButtonFinal = document.querySelector('.home-button-final');
+
+homeButtonIntro.addEventListener('click', backToHome);
+homeButtonFinal.addEventListener('click', backToHome);
+    startButton.addEventListener('click', startQuiz);
+    retryButton.addEventListener('click', retryQuiz);
+
+    function startQuiz() {
+        introContent.style.display = 'none';
+        finalScreen.style.display = 'none';
+        quizContent.style.display = 'block';
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const currentQuestion = quizData[currentQuestionIndex];
+        questionEl.textContent = currentQuestion.question;
+        optionsEl.innerHTML = '';
+        resultEl.textContent = '';
+        correctAnswerEl.textContent = '';
+
+        currentQuestion.options.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.onclick = () => selectAnswer(option);
+            optionsEl.appendChild(button);
+        });
+    }
+
+    function selectAnswer(option) {
+        const currentQuestion = quizData[currentQuestionIndex];
+        if (option === currentQuestion.correct) {
+            resultEl.textContent = 'Correct!';
+            resultEl.style.color = 'green';
+            score++;
+        } else {
+            resultEl.textContent = 'Incorrect!';
+            resultEl.style.color = 'red';
+        }
+
+        correctAnswerEl.textContent = `Correct answer: ${currentQuestion.correct}`;
+        currentQuestionIndex++;
+
+        setTimeout(() => {
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showFinalResult();
+            }
+        }, 2500);
+    }
+
+    function showFinalResult() {
+        quizContent.style.display = 'none';
+        finalScreen.style.display = 'block';
+        finalMessageEl.textContent = `Quiz Completed! You scored ${score} out of ${quizData.length}`;
+    }
+
+    function retryQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        startQuiz();
+    }
+
+    function backToHome() {
+    window.location.href = "index.html";
+}
+</script>
+
+</body>
+</html>
